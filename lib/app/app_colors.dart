@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract final class AppColors {
 
-  static const Color backgroundColor = Color(0xFFF4F1EA);
+  static const backgroundColor = Color(0xFFF4F1EA);
   static const canvas = Color(0xFFF2F4F0);
   static const paper = Color(0xFFFFFFFF);
   static const ink = Color(0xFF17231E);
@@ -14,4 +14,5 @@ abstract final class AppColors {
   static const clay = Color(0xFFA35F49);
   static const mint = Color(0xFFE5F0EA);
   static const sand = Color(0xFFF5EDE0);
+  static const transparent = Colors.transparent;
 }

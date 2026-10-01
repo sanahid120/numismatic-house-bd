@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:numismatic_house_bd/app/app_colors.dart';
 
 class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
   const DesktopNavbar({super.key});
