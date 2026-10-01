@@ -21,7 +21,7 @@ class SectionHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Container(height: 3, width: 50, color: AppColors.forest),
+        Container(height: 3, width: 100, color: AppColors.forest),
         const SizedBox(height: 15),
         Text(
           subtitle,
