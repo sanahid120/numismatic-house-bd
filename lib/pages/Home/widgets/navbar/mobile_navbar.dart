@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../app/app_colors.dart';
+
+import '../../../../app/app_colors.dart';
 
 class MobileNavbar extends StatelessWidget implements PreferredSizeWidget {
   const MobileNavbar({super.key});

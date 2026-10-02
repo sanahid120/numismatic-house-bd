@@ -19,6 +19,7 @@ class DesktopView extends StatelessWidget {
           ),
           const SizedBox(height: 40),
           GridView.builder(
+            key: const ValueKey('popular_products_desktop_grid'),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -29,7 +30,10 @@ class DesktopView extends StatelessWidget {
             ),
             itemCount: popularProducts.length,
             itemBuilder: (context, index) {
-              return ProductCard(product: popularProducts[index]);
+              return ProductCard(
+                key: ValueKey('desktop_product_${popularProducts[index].name}_$index'),
+                product: popularProducts[index],
+              );
             },
           ),
         ],

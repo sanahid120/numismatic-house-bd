@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../app/app_colors.dart';
+
+import '../../../../app/app_colors.dart';
 
 class SectionHeaderWithAction extends StatelessWidget {
   final String title;
@@ -32,7 +33,7 @@ class SectionHeaderWithAction extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Container(height: 3, width: 50, color: AppColors.forest),
+            Container(height: 3, width: 170, color: AppColors.forest),
             const SizedBox(height: 15),
             Text(
               subtitle,

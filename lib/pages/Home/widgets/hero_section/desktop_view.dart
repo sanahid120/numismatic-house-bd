@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import '../../app/app_colors.dart';
+import '../../../../app/app_colors.dart';
 
-class TabView extends StatelessWidget {
-  const TabView({super.key});
+class DesktopView extends StatelessWidget {
+  const DesktopView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    
     return Container(
-      height: 500,
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+      height: 550,
+      width: width,
+      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(30),
         image: const DecorationImage(
           image: NetworkImage('https://images.unsplash.com/photo-1628527304948-06157ee3c8a6?q=80&w=2070&auto=format&fit=crop'),
           fit: BoxFit.cover,
@@ -19,18 +21,18 @@ class TabView extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(30),
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
               AppColors.forestDeep.withOpacity(0.9),
-              AppColors.forestDeep.withOpacity(0.5),
+              AppColors.forestDeep.withOpacity(0.3),
               Colors.transparent,
             ],
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 60),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,8 +49,8 @@ class TabView extends StatelessWidget {
                 style: TextStyle(
                   color: AppColors.brass,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                  fontSize: 11,
+                  letterSpacing: 2,
+                  fontSize: 12,
                 ),
               ),
             ),
@@ -57,24 +59,24 @@ class TabView extends StatelessWidget {
               'Preserving History,\nOne Note at a Time',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 42,
+                fontSize: 56,
                 fontWeight: FontWeight.w900,
                 height: 1.1,
               ),
             ),
             const SizedBox(height: 15),
             const SizedBox(
-              width: 400,
+              width: 500,
               child: Text(
-                'Explore our exclusive collection of authentic, high-grade collectable banknotes. Trusted by collectors across Bangladesh.',
+                'Explore our exclusive collection of authentic, high-grade collectable banknotes from around the world. Trusted by collectors across Bangladesh.',
                 style: TextStyle(
                   color: Colors.white70,
-                  fontSize: 16,
+                  fontSize: 18,
                   height: 1.5,
                 ),
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 35),
             Row(
               children: [
                 ElevatedButton(
@@ -82,21 +84,21 @@ class TabView extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.brass,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 22),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
-                  child: const Text('SHOP NOW', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text('SHOP COLLECTION', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
-                const SizedBox(width: 15),
+                const SizedBox(width: 20),
                 OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
                     side: const BorderSide(color: Colors.white),
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 22),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
-                  child: const Text('DETAILS', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text('LEARN MORE', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
