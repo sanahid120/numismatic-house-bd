@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../../app/router/route_paths.dart';
 
 class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
   const DesktopNavbar({super.key});
@@ -68,13 +70,11 @@ class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _NavBarLink(title: 'Home', onTap: () {}),
-                _NavBarLink(title: 'Shop', onTap: () {
-                  Navigator.pushNamed(context, '/shop');
-                }),
+                _NavBarLink(title: 'Home', onTap: () => context.go(RoutePaths.home)),
+                _NavBarLink(title: 'Shop', onTap: () => context.go(RoutePaths.products)),
                 _NavBarLink(title: 'Categories', onTap: () {}),
                 _NavBarLink(title: 'About', onTap: () {}),
-                _NavBarLink(title: 'Contact', onTap: () {}),
+                _NavBarLink(title: 'Contact', onTap: () => context.go(RoutePaths.contact)),
               ],
             ),
             const SizedBox(width: 10),
@@ -125,7 +125,7 @@ class _NavBarLinkState extends State<_NavBarLink> {
           ),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12), // Slightly reduced padding
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: InkWell(
         onTap: widget.onTap,
         onHover: (hovering) {

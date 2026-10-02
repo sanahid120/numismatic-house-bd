@@ -47,10 +47,10 @@ class MobileNavbar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             const Spacer(),
-            // Menu Icon (opens end drawer for site navigation/filters)
+            // Menu Icon (opens main site navigation drawer)
             IconButton(
               onPressed: () {
-                Scaffold.of(context).openEndDrawer();
+                Scaffold.of(context).openDrawer();
               },
               icon: const Icon(Icons.menu, color: AppColors.forest),
             ),

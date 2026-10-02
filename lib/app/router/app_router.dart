@@ -3,12 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:numismatic_house_bd/app/router/route_names.dart';
 import 'package:numismatic_house_bd/app/router/route_paths.dart';
 import 'package:numismatic_house_bd/pages/Home/screens/home.dart';
+
+import '../../pages/shop/sceens/shop_screen.dart';
 final appRouter = GoRouter(
   routes: [
     GoRoute(
       name: RouteNames.home,
       path: RoutePaths.home,
-      builder: (_, _) => const Homepage(),
+      builder: (_, _) => const ShopScreen(),
     ),
 
     // GoRoute(
