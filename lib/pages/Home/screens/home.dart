@@ -21,7 +21,7 @@ class _HomepageState extends State<Homepage> {
     return const Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: Navbar(),
-      drawer: SiteDrawer(), // Shared Site Menu
+      endDrawer: SiteDrawer(), // Shared Site Menu
       body: SingleChildScrollView(
         child: Column(
           children: [

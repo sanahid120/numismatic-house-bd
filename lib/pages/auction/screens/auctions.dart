@@ -1,44 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-
 import '../../../app/app_colors.dart';
 import '../../../shared/widgets/navbar/navbar.dart';
 import '../../../shared/widgets/navbar/site_drawer.dart';
 import '../../Home/widgets/footer/footer_section.dart';
-import '../widgets/shop_sidebar.dart';
-import 'desktop_shop_view.dart';
-import 'mobile_shop_view.dart';
-import 'tab_shop_view.dart';
+import '../../shop/widgets/shop_sidebar.dart';
+import 'desktop_auction_view.dart';
+import 'mobile_auction_view.dart';
+import 'tab_auction_view.dart';
 
-class ShopScreen extends StatefulWidget {
-  const ShopScreen({super.key});
+class AuctionsScreen extends StatefulWidget {
+  const AuctionsScreen({super.key});
 
   @override
-  State<ShopScreen> createState() => _ShopScreenState();
+  State<AuctionsScreen> createState() => _AuctionsScreenState();
 }
 
-class _ShopScreenState extends State<ShopScreen> {
-  String _searchQuery = '';
+class _AuctionsScreenState extends State<AuctionsScreen> {
   String _selectedCategory = 'All Collection';
-  int _currentPage = 1;
-
-  void _onSearch(String query) {
-    setState(() {
-      _searchQuery = query;
-      _currentPage = 1;
-    });
-  }
 
   void _onCategorySelected(String category) {
     setState(() {
       _selectedCategory = category;
-      _currentPage = 1;
-    });
-  }
-
-  void _onPageChanged(int page) {
-    setState(() {
-      _currentPage = page;
     });
   }
 
@@ -49,33 +32,36 @@ class _ShopScreenState extends State<ShopScreen> {
         return Scaffold(
           backgroundColor: AppColors.backgroundColor,
           appBar: const Navbar(),
-          drawer: SiteDrawer(),
+          drawer: const SiteDrawer(),
           endDrawer: sizingInformation.isDesktop
               ? null
-              :  SiteDrawer(),
+              : Drawer(
+                  width: sizingInformation.isMobile
+                      ? MediaQuery.of(context).size.width * 0.85
+                      : 400,
+                  child: SafeArea(
+                    child: ShopSidebar(
+                      onCategorySelected: (cat) {
+                        _onCategorySelected(cat);
+                        Navigator.pop(context);
+                      },
+                      onSearch: (query) {},
+                    ),
+                  ),
+                ),
           body: SingleChildScrollView(
             child: Column(
               children: [
                 ScreenTypeLayout.builder(
-                  mobile: (context) => MobileShopView(
-                    searchQuery: _searchQuery,
+                  mobile: (context) => MobileAuctionView(
                     selectedCategory: _selectedCategory,
-                    currentPage: _currentPage,
-                    onPageChanged: _onPageChanged,
                   ),
-                  tablet: (context) => TabShopView(
-                    searchQuery: _searchQuery,
+                  tablet: (context) => TabAuctionView(
                     selectedCategory: _selectedCategory,
-                    currentPage: _currentPage,
-                    onPageChanged: _onPageChanged,
                   ),
-                  desktop: (context) => DesktopShopView(
-                    searchQuery: _searchQuery,
+                  desktop: (context) => DesktopAuctionView(
                     selectedCategory: _selectedCategory,
-                    currentPage: _currentPage,
-                    onSearch: _onSearch,
                     onCategorySelected: _onCategorySelected,
-                    onPageChanged: _onPageChanged,
                   ),
                 ),
                 const FooterSection(),

@@ -60,7 +60,7 @@ class TabletNavbar extends StatelessWidget implements PreferredSizeWidget {
             // Menu trigger for site navigation
             IconButton(
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                Scaffold.of(context).openEndDrawer();
               },
               icon: const Icon(Icons.menu, color: AppColors.forest, size: 22),
             ),

@@ -9,7 +9,7 @@ class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Container(
       color: const Color(0xFFF1F4F1),
-      padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
       alignment: Alignment.center,
       child: Container(
         height: 60,
@@ -71,9 +71,8 @@ class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _NavBarLink(title: 'Home', onTap: () => context.go(RoutePaths.home)),
-                _NavBarLink(title: 'Shop', onTap: () => context.go(RoutePaths.products)),
-                _NavBarLink(title: 'Categories', onTap: () {}),
-                _NavBarLink(title: 'About', onTap: () {}),
+                _NavBarLink(title: 'Shop', onTap: () => context.go(RoutePaths.shop)),
+                _NavBarLink(title: 'Auction', onTap: () => context.go(RoutePaths.auction)),
                 _NavBarLink(title: 'Contact', onTap: () => context.go(RoutePaths.contact)),
               ],
             ),
