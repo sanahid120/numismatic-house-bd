@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:numismatic_house_bd/auth/providers/auth_provider.dart';
 import 'package:numismatic_house_bd/admin/auctions/screens/manage_auctions.dart';
+import 'package:numismatic_house_bd/admin/categories/screens/manage_categories.dart';
 import 'package:numismatic_house_bd/admin/dashboard/screens/admin_dashboard.dart';
 import 'package:numismatic_house_bd/admin/products/screens/manage_products.dart';
 import 'package:numismatic_house_bd/admin/profiles/screens/admin_profile.dart';
@@ -10,13 +12,47 @@ import 'package:numismatic_house_bd/auth/presentation/screens/signin_screen.dart
 import 'package:numismatic_house_bd/auth/presentation/screens/signup_screen.dart';
 import 'package:numismatic_house_bd/pages/Home/screens/home.dart';
 import 'package:numismatic_house_bd/pages/auction/screens/auctions.dart';
+import 'package:numismatic_house_bd/pages/auction/screens/auction_details_screen.dart';
+import 'package:numismatic_house_bd/features/contact/presentation/screens/contact_screen.dart';
 import 'package:numismatic_house_bd/pages/profiles/screens/user_profile.dart';
-import 'package:numismatic_house_bd/pages/shop/sceens/shop_screen.dart';
+import 'package:numismatic_house_bd/pages/shop/screens/shop_screen.dart';
 import 'package:numismatic_house_bd/shared/screens/product_details/product_details_screen.dart';
 import '../app_colors.dart';
 
-final appRouter = GoRouter(
+GoRouter createAppRouter(AuthProvider auth) => GoRouter(
   initialLocation: RoutePaths.home,
+  refreshListenable: auth,
+  redirect: (context, state) async {
+    final location = state.uri.path;
+    final isAdminRoute = location == RoutePaths.adminDashboard ||
+        location.startsWith('${RoutePaths.adminDashboard}/');
+    final isProfileRoute = location == RoutePaths.profile ||
+        location == RoutePaths.adminProfile;
+    final isAuthRoute = location == RoutePaths.signIn ||
+        location == RoutePaths.signUp;
+    final user = auth.currentUser;
+
+    if (isAdminRoute && user == null) {
+      return '${RoutePaths.signIn}?from=${Uri.encodeComponent(location)}';
+    }
+    if ((isAdminRoute || isProfileRoute) &&
+        user != null &&
+        !user.emailVerified) {
+      return RoutePaths.signIn;
+    }
+    if (isProfileRoute && user == null) {
+      return '${RoutePaths.signIn}?from=${Uri.encodeComponent(location)}';
+    }
+    if (isAdminRoute && user != null) {
+      if (!auth.profileLoaded) await auth.profileReady;
+      if (!auth.isAdmin) return RoutePaths.home;
+    }
+    if (isAuthRoute && user != null && user.emailVerified) {
+      if (!auth.profileLoaded) await auth.profileReady;
+      return auth.isAdmin ? RoutePaths.adminDashboard : RoutePaths.home;
+    }
+    return null;
+  },
   routes: [
     GoRoute(
       name: RouteNames.home,
@@ -26,12 +62,21 @@ final appRouter = GoRouter(
     GoRoute(
       name: RouteNames.shop,
       path: RoutePaths.shop,
-      builder: (context, state) => const ShopScreen(),
+      builder: (context, state) => ShopScreen(
+        initialCategory: state.uri.queryParameters['category'] ?? 'All Collection',
+      ),
     ),
     GoRoute(
       name: RouteNames.auction,
       path: RoutePaths.auction,
       builder: (context, state) => const AuctionsScreen(),
+    ),
+    GoRoute(
+      name: RouteNames.auctionDetails,
+      path: RoutePaths.auctionDetails,
+      builder: (context, state) => AuctionDetailsScreen(
+        auctionId: state.pathParameters['id']!,
+      ),
     ),
     GoRoute(
       name: RouteNames.productDetails,
@@ -44,7 +89,7 @@ final appRouter = GoRouter(
     GoRoute(
       name: RouteNames.contact,
       path: RoutePaths.contact,
-      builder: (context, state) => const Homepage(), // Mapping to Home for now
+      builder: (context, state) => const ContactScreen(),
     ),
 
     // Auth Routes
@@ -76,6 +121,11 @@ final appRouter = GoRouter(
       name: RouteNames.adminProducts,
       path: RoutePaths.adminProducts,
       builder: (context, state) => const ManageProductsScreen(),
+    ),
+    GoRoute(
+      name: RouteNames.adminCategories,
+      path: RoutePaths.adminCategories,
+      builder: (context, state) => const ManageCategoriesScreen(),
     ),
     GoRoute(
       name: RouteNames.adminAuctions,

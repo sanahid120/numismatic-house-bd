@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'product_card.dart';
-import 'product_model.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../app/router/route_paths.dart';
+import '../../../../features/catalog/presentation/widgets/catalog_product_grid.dart';
 import 'section_header_with_action.dart';
 
 class TabView extends StatelessWidget {
@@ -15,23 +16,10 @@ class TabView extends StatelessWidget {
           SectionHeaderWithAction(
             title: 'Popular Products',
             subtitle: 'Featured Collectibles',
-            onSeeAllTap: () {},
+            onSeeAllTap: () => context.go(RoutePaths.shop),
           ),
           const SizedBox(height: 35),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20,
-              childAspectRatio: 0.7,
-            ),
-            itemCount: popularProducts.length > 6 ? 6 : popularProducts.length,
-            itemBuilder: (context, index) {
-              return ProductCard(product: popularProducts[index]);
-            },
-          ),
+          const CatalogProductGrid(columns: 3, aspectRatio: 0.7, maxItems: 6),
         ],
       ),
     );

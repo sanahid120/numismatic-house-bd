@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../app/app_colors.dart';
+import '../../../app/app_colors.dart';
+import 'profile_button.dart';
 
 class MobileNavbar extends StatelessWidget implements PreferredSizeWidget {
   const MobileNavbar({super.key});
@@ -47,10 +48,11 @@ class MobileNavbar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             const Spacer(),
+            const ProfileButton(color: AppColors.forest),
             // Menu Icon (opens main site navigation drawer)
             IconButton(
               onPressed: () {
-                Scaffold.of(context).openEndDrawer();
+                Scaffold.of(context).openDrawer();
               },
               icon: const Icon(Icons.menu, color: AppColors.forest),
             ),

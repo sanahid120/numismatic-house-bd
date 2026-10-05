@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../app/app_colors.dart';
+import '../../../app/router/route_paths.dart';
 import '../../shop/widgets/shop_sidebar.dart';
-import '../models/auction_product.dart';
-import '../widgets/auction_card.dart';
+import '../../../features/auctions/models/auction.dart';
+import '../../../features/auctions/presentation/widgets/auction_card.dart';
 
 class DesktopAuctionView extends StatelessWidget {
   final String selectedCategory;
   final Function(String) onCategorySelected;
+  final Function(String) onSearch;
+  final List<AuctionProduct> products;
 
   const DesktopAuctionView({
     super.key,
     required this.selectedCategory,
     required this.onCategorySelected,
+    required this.onSearch,
+    required this.products,
   });
 
   @override
@@ -31,7 +37,8 @@ class DesktopAuctionView extends StatelessWidget {
                 width: sidebarWidth,
                 child: ShopSidebar(
                   onCategorySelected: onCategorySelected,
-                  onSearch: (query) {},
+                  onSearch: onSearch,
+                  selectedCategory: selectedCategory,
                 ),
               ),
               SizedBox(width: constraints.maxWidth > 1200 ? 40 : 20),
@@ -42,7 +49,7 @@ class DesktopAuctionView extends StatelessWidget {
                   children: [
                     _buildHeader(constraints.maxWidth),
                     const SizedBox(height: 30),
-                    _buildAuctionGrid(constraints.maxWidth),
+                    _buildAuctionGrid(constraints.maxWidth, context),
                     const SizedBox(height: 60),
                   ],
                 ),
@@ -85,7 +92,7 @@ class DesktopAuctionView extends StatelessWidget {
     );
   }
 
-  Widget _buildAuctionGrid(double width) {
+  Widget _buildAuctionGrid(double width, BuildContext context) {
     int crossAxisCount = width > 1100 ? 3 : 2;
 
     return GridView.builder(
@@ -97,13 +104,12 @@ class DesktopAuctionView extends StatelessWidget {
         mainAxisSpacing: 25,
         childAspectRatio: 0.72,
       ),
-      itemCount: demoAuctions.length,
+      itemCount: products.length,
       itemBuilder: (context, index) {
+        final product = products[index];
         return AuctionCard(
-          product: demoAuctions[index],
-          onTap: () {
-            // TODO: Navigate to Auction Details
-          },
+          product: product,
+          onTap: () => context.push('${RoutePaths.auction}/${product.id}'),
         );
       },
     );

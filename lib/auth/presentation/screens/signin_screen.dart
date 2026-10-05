@@ -56,6 +56,26 @@ class _SigninScreenState extends State<SigninScreen> {
     }
   }
 
+  Future<void> _handlePasswordReset() async {
+    final email = _emailController.text.trim();
+    if (Validations.validateEmail(email) != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter a valid email address first.')),
+      );
+      return;
+    }
+    final auth = context.read<AuthProvider>();
+    final sent = await auth.sendPasswordResetEmail(email);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(sent
+            ? 'If an account uses that email, a reset link has been sent.'
+            : auth.errorMessage ?? 'Could not send the reset link.'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,7 +170,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: _handlePasswordReset,
                             child: const Text(
                               'Forgot Password?',
                               style: TextStyle(color: AppColors.forest, fontWeight: FontWeight.bold, fontSize: 13),

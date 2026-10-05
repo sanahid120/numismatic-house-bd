@@ -46,8 +46,7 @@ class SiteDrawer extends StatelessWidget {
           _buildDrawerItem(context, Icons.gavel, 'Auction', RoutePaths.auction),
           _buildDrawerItem(context, Icons.contact_mail, 'Contact', RoutePaths.contact),
           const Divider(),
-          _buildDrawerItem(context, Icons.person, 'Profile', '#'),
-          _buildDrawerItem(context, Icons.shopping_cart, 'Cart', '#'),
+          _buildDrawerItem(context, Icons.person, 'Profile', RoutePaths.profile),
         ],
       ),
     );

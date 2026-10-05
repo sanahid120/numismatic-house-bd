@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'product_card.dart';
-import 'product_model.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../app/router/route_paths.dart';
+import '../../../../features/catalog/presentation/widgets/catalog_product_grid.dart';
 import 'section_header_with_action.dart';
 
 class MobileView extends StatelessWidget {
@@ -15,23 +16,10 @@ class MobileView extends StatelessWidget {
           SectionHeaderWithAction(
             title: 'Popular Products',
             subtitle: 'Featured',
-            onSeeAllTap: () {},
+            onSeeAllTap: () => context.go(RoutePaths.shop),
           ),
           const SizedBox(height: 25),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-              childAspectRatio: 0.65,
-            ),
-            itemCount: 4, // Show only 4 items on mobile to keep it clean
-            itemBuilder: (context, index) {
-              return ProductCard(product: popularProducts[index]);
-            },
-          ),
+          const CatalogProductGrid(columns: 2, aspectRatio: 0.65, maxItems: 4),
         ],
       ),
     );

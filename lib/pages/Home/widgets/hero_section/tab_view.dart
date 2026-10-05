@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../app/app_colors.dart';
+import '../../../../app/router/route_paths.dart';
 
 class TabView extends StatelessWidget {
   const TabView({super.key});
@@ -24,8 +26,8 @@ class TabView extends StatelessWidget {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
-              AppColors.forestDeep.withOpacity(0.9),
-              AppColors.forestDeep.withOpacity(0.5),
+              AppColors.forestDeep.withValues(alpha: 0.9),
+              AppColors.forestDeep.withValues(alpha: 0.5),
               Colors.transparent,
             ],
           ),
@@ -38,7 +40,7 @@ class TabView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColors.brass.withOpacity(0.2),
+                color: AppColors.brass.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(color: AppColors.brass, width: 1),
               ),
@@ -78,7 +80,7 @@ class TabView extends StatelessWidget {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => context.go(RoutePaths.shop),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.brass,
                     foregroundColor: Colors.white,
@@ -89,7 +91,7 @@ class TabView extends StatelessWidget {
                 ),
                 const SizedBox(width: 15),
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () => context.go(RoutePaths.auction),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
                     side: const BorderSide(color: Colors.white),

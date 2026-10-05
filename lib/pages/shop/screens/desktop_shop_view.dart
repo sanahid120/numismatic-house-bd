@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app/app_colors.dart';
-import '../../Home/widgets/popular_products/product_card.dart';
-import '../../Home/widgets/popular_products/product_model.dart';
-import '../widgets/pagination_widget.dart';
+import '../../../features/catalog/presentation/widgets/catalog_product_grid.dart';
 import '../widgets/shop_sidebar.dart';
 
 class DesktopShopView extends StatelessWidget {
@@ -43,6 +41,7 @@ class DesktopShopView extends StatelessWidget {
                 child: ShopSidebar(
                   onCategorySelected: onCategorySelected,
                   onSearch: onSearch,
+                  selectedCategory: selectedCategory,
                 ),
               ),
               SizedBox(width: constraints.maxWidth > 1200 ? 40 : 20),
@@ -54,12 +53,6 @@ class DesktopShopView extends StatelessWidget {
                     _buildHeader(constraints.maxWidth),
                     const SizedBox(height: 30),
                     _buildProductGrid(constraints.maxWidth),
-                    const SizedBox(height: 60),
-                    PaginationWidget(
-                      currentPage: currentPage,
-                      totalPages: 5,
-                      onPageChanged: onPageChanged,
-                    ),
                   ],
                 ),
               ),
@@ -97,11 +90,6 @@ class DesktopShopView extends StatelessWidget {
             ),
           ],
         ),
-        if (width > 1000)
-          Text(
-            'Showing 1–12 of 60 results',
-            style: TextStyle(color: AppColors.mutedInk, fontSize: 14),
-          ),
       ],
     );
   }
@@ -110,22 +98,13 @@ class DesktopShopView extends StatelessWidget {
     // Dynamic column count: 3 for large desktop, 2 for smaller desktop
     int crossAxisCount = width > 1100 ? 3 : 2;
 
-    return GridView.builder(
-      key: const ValueKey('shop_desktop_grid'),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: 25,
-        mainAxisSpacing: 25,
-        childAspectRatio: 0.72,
-      ),
-      itemCount: popularProducts.length,
-      itemBuilder: (context, index) {
-        return ProductCard(
-          product: popularProducts[index],
-        );
-      },
+    return CatalogProductGrid(
+      columns: crossAxisCount,
+      aspectRatio: 0.72,
+      searchQuery: searchQuery,
+      category: selectedCategory,
+      page: currentPage,
+      onPageChanged: onPageChanged,
     );
   }
 }

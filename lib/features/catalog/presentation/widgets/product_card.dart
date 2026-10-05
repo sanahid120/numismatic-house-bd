@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../app/app_colors.dart';
 import '../../../../app/router/route_names.dart';
-import 'product_model.dart';
+import '../../../../features/catalog/models/product.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;

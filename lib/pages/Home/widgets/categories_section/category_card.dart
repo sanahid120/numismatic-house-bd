@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../app/app_colors.dart';
+import '../../../../app/router/route_paths.dart';
 import 'category_model.dart';
 
 class CategoryCard extends StatefulWidget {
@@ -25,7 +27,7 @@ class _CategoryCardState extends State<CategoryCard> {
           boxShadow: [
             if (_isHovered)
               BoxShadow(
-                color: AppColors.forest.withOpacity(0.2),
+                color: AppColors.forest.withValues(alpha: 0.2),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -33,7 +35,13 @@ class _CategoryCardState extends State<CategoryCard> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: Stack(
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => context.go(
+                '${RoutePaths.shop}?category=${Uri.encodeQueryComponent(widget.category.title.replaceAll(' Notes', ''))}',
+              ),
+              child: Stack(
             children: [
               Positioned.fill(
                 child: AnimatedScale(
@@ -85,6 +93,8 @@ class _CategoryCardState extends State<CategoryCard> {
                 ),
               ),
             ],
+              ),
+            ),
           ),
         ),
       ),

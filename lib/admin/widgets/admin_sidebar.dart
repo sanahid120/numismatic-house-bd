@@ -58,6 +58,12 @@ class AdminSidebar extends StatelessWidget {
           ),
           _buildSidebarItem(
             context,
+            icon: Icons.category_outlined,
+            title: 'Manage Categories',
+            path: RoutePaths.adminCategories,
+          ),
+          _buildSidebarItem(
+            context,
             icon: Icons.gavel_outlined,
             title: 'Manage Auctions',
             path: RoutePaths.adminAuctions,

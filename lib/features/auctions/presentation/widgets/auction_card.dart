@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../../app/app_colors.dart';
-import '../models/auction_product.dart';
+import '../../../../app/app_colors.dart';
+import '../../models/auction.dart';
 import 'auction_timer.dart';
 
 class AuctionCard extends StatefulWidget {

@@ -50,6 +50,7 @@ dependencies:
   firebase_auth_web: ^6.3.0
   cloud_firestore: ^6.10.0
   firebase_auth: ^6.7.0
+  firebase_storage: ^13.6.0
 
 dev_dependencies:
   flutter_test:

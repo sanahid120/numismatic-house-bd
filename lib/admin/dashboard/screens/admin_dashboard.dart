@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import '../../../app/app_colors.dart';
 import '../../../app/router/route_paths.dart';
 import '../../../auth/providers/auth_provider.dart';
+import '../../../features/auctions/providers/auction_provider.dart';
+import '../../../features/auctions/models/auction.dart';
+import '../../../features/catalog/providers/catalog_provider.dart';
+import '../../../features/catalog/models/product.dart';
 import '../../widgets/admin_sidebar.dart';
 
 class AdminDashboard extends StatelessWidget {
@@ -41,7 +46,7 @@ class AdminDashboard extends StatelessWidget {
                       _buildHeader(),
                       const SizedBox(height: 30),
                       // Stats Grid
-                      _buildStatsGrid(sizingInformation),
+                      _buildStatsGrid(context, sizingInformation),
                       const SizedBox(height: 40),
                       
                       // Responsive Content: Engagement and Admin Quick Info
@@ -81,20 +86,34 @@ class AdminDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsGrid(SizingInformation sizingInformation) {
+  Widget _buildStatsGrid(BuildContext context, SizingInformation sizingInformation) {
     int crossAxisCount = sizingInformation.isMobile ? 1 : 2;
 
-    return GridView.count(
-      crossAxisCount: crossAxisCount,
-      crossAxisSpacing: 20,
-      mainAxisSpacing: 20,
-      shrinkWrap: true,
-      childAspectRatio: sizingInformation.isMobile ? 2.5 : 4,
-      physics: const NeverScrollableScrollPhysics(),
-      children: [
-        _buildStatCard('Total Products', '458', Icons.inventory_2_outlined, Colors.orange),
-        _buildStatCard('Live Auctions', '12', Icons.gavel_outlined, Colors.red),
-      ],
+    return StreamBuilder<List<Product>>(
+      stream: context.read<CatalogProvider>().watchAllProducts(),
+      builder: (context, productsSnapshot) => StreamBuilder<List<AuctionProduct>>(
+        stream: context.read<AuctionProvider>().watchAllAuctions(),
+        builder: (context, auctionsSnapshot) {
+          final products = productsSnapshot.data?.length.toString() ?? '—';
+          final auctions = auctionsSnapshot.data
+                  ?.where((item) => item.published && item.endTime.isAfter(DateTime.now()))
+                  .length
+                  .toString() ??
+              '—';
+          return GridView.count(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+            shrinkWrap: true,
+            childAspectRatio: sizingInformation.isMobile ? 2.5 : 4,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              _buildStatCard('Total Products', products, Icons.inventory_2_outlined, Colors.orange),
+              _buildStatCard('Live Auctions', auctions, Icons.gavel_outlined, Colors.red),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -161,7 +180,7 @@ class AdminDashboard extends StatelessWidget {
               const Divider(),
               const SizedBox(height: 10),
               _buildQuickLink(Icons.person_outline, 'Profile Settings', () {
-                // Navigate to profile
+                context.go(RoutePaths.adminProfile);
               }),
               _buildQuickLink(Icons.logout, 'Sign Out', () async {
                 await auth.signOut();
@@ -202,7 +221,7 @@ class AdminDashboard extends StatelessWidget {
           Container(
             height: 300,
             alignment: Alignment.center,
-            child: const Text('Chart Statistics Visualization Placeholder', style: TextStyle(color: AppColors.mutedInk)),
+          child: const Text('Engagement reporting will appear here when analytics data is connected.', style: TextStyle(color: AppColors.mutedInk), textAlign: TextAlign.center),
           ),
         ],
       ),

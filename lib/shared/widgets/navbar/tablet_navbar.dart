@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../app/app_colors.dart';
+import 'package:go_router/go_router.dart';
+import '../../../app/app_colors.dart';
+import '../../../app/router/route_paths.dart';
+import 'profile_button.dart';
 
 class TabletNavbar extends StatelessWidget implements PreferredSizeWidget {
   const TabletNavbar({super.key});
@@ -49,18 +52,20 @@ class TabletNavbar extends StatelessWidget implements PreferredSizeWidget {
             ),
             const Spacer(),
             // Primary Nav Links
-            _NavBarLink(title: 'Home', onTap: () {}),
-            _NavBarLink(title: 'Shop', onTap: () {}),
+            _NavBarLink(title: 'Home', onTap: () => context.go(RoutePaths.home)),
+            _NavBarLink(title: 'Shop', onTap: () => context.go(RoutePaths.shop)),
             const SizedBox(width: 10),
             // Actions
             IconButton(
-              onPressed: () {},
+              tooltip: 'Search products',
+              onPressed: () => context.go(RoutePaths.shop),
               icon: const Icon(Icons.search, color: AppColors.forest, size: 22),
             ),
+            const ProfileButton(color: AppColors.forest),
             // Menu trigger for site navigation
             IconButton(
               onPressed: () {
-                Scaffold.of(context).openEndDrawer();
+                Scaffold.of(context).openDrawer();
               },
               icon: const Icon(Icons.menu, color: AppColors.forest, size: 22),
             ),

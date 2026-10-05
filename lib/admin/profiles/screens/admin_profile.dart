@@ -18,6 +18,68 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
 
+  Future<void> _changePassword() async {
+    final formKey = GlobalKey<FormState>();
+    final current = TextEditingController();
+    final next = TextEditingController();
+    final confirm = TextEditingController();
+    final approved = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Change password'),
+        content: Form(
+          key: formKey,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            TextFormField(
+              controller: current,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'Current password'),
+              validator: (value) => value == null || value.isEmpty ? 'Enter your current password.' : null,
+            ),
+            TextFormField(
+              controller: next,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'New password'),
+              validator: (value) => value == null || value.length < 8 ? 'Use at least 8 characters.' : null,
+            ),
+            TextFormField(
+              controller: confirm,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'Confirm new password'),
+              validator: (value) => value != next.text ? 'Passwords do not match.' : null,
+            ),
+          ]),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) Navigator.pop(dialogContext, true);
+            },
+            child: const Text('Update password'),
+          ),
+        ],
+      ),
+    );
+    if (approved == true && mounted) {
+      final auth = context.read<AuthProvider>();
+      final updated = await auth.reauthenticateAndChangePassword(
+        currentPassword: current.text,
+        newPassword: next.text,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(updated
+              ? 'Password updated.'
+              : auth.errorMessage ?? 'Could not update password. Sign in again and retry.'),
+        ));
+      }
+    }
+    current.dispose();
+    next.dispose();
+    confirm.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -201,7 +263,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
               contentPadding: EdgeInsets.zero,
               title: const Text('Change Admin Password'),
               trailing: ElevatedButton(
-                onPressed: () {},
+                onPressed: _changePassword,
                 style: ElevatedButton.styleFrom(backgroundColor: AppColors.clay, foregroundColor: Colors.white),
                 child: const Text('Change'),
               ),

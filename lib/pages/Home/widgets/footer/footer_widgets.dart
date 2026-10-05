@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../app/app_colors.dart';
+import '../../../../app/app_strings.dart';
+import '../../../../app/config/app_config.dart';
 
 class FooterColumn extends StatelessWidget {
   final String title;
@@ -29,15 +33,15 @@ class FooterColumn extends StatelessWidget {
 
 class FooterLink extends StatelessWidget {
   final String label;
-  final VoidCallback onTap;
-  const FooterLink({super.key, required this.label, required this.onTap});
+  final String path;
+  const FooterLink({super.key, required this.label, required this.path});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: InkWell(
-        onTap: onTap,
+        onTap: () => context.go(path),
         child: Text(
           label,
           style: const TextStyle(
@@ -52,15 +56,28 @@ class FooterLink extends StatelessWidget {
 
 class SocialIcon extends StatelessWidget {
   final IconData icon;
-  final VoidCallback onTap;
-  const SocialIcon({super.key, required this.icon, required this.onTap});
+  const SocialIcon({super.key, required this.icon});
+
+  Future<void> _open(BuildContext context) async {
+    final url = switch (icon) {
+      Icons.facebook => AppStrings.facebookProfileUrl,
+      Icons.work_outline => AppStrings.linkedinProfileUrl,
+      _ => AppConfig.canonicalOrigin,
+    };
+    final opened = await launchUrl(Uri.parse(url), webOnlyWindowName: '_blank');
+    if (!opened && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open this link.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: 15),
       child: InkWell(
-        onTap: onTap,
+        onTap: () => _open(context),
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -77,24 +94,28 @@ class SocialIcon extends StatelessWidget {
 class ContactItem extends StatelessWidget {
   final IconData icon;
   final String text;
-  const ContactItem({super.key, required this.icon, required this.text});
+  final String? path;
+  const ContactItem({super.key, required this.icon, required this.text, this.path});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: AppColors.brass, size: 18),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(color: Colors.white70, fontSize: 14),
+      child: InkWell(
+        onTap: path == null ? null : () => context.go(path!),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: AppColors.brass, size: 18),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                text,
+                style: const TextStyle(color: Colors.white70, fontSize: 14),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

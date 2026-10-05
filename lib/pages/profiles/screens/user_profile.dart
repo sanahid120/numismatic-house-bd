@@ -39,7 +39,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: const Navbar(),
-      endDrawer: const SiteDrawer(),
+      drawer: const SiteDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../app/app_colors.dart';
+import '../../../../app/router/route_paths.dart';
 
 class MobileView extends StatelessWidget {
   const MobileView({super.key});
@@ -24,8 +26,8 @@ class MobileView extends StatelessWidget {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
-              AppColors.forestDeep.withOpacity(0.9),
-              AppColors.forestDeep.withOpacity(0.4),
+              AppColors.forestDeep.withValues(alpha: 0.9),
+              AppColors.forestDeep.withValues(alpha: 0.4),
               Colors.transparent,
             ],
           ),
@@ -38,7 +40,7 @@ class MobileView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.brass.withOpacity(0.2),
+                color: AppColors.brass.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(color: AppColors.brass, width: 1),
               ),
@@ -76,7 +78,7 @@ class MobileView extends StatelessWidget {
             ),
             const SizedBox(height: 25),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => context.go(RoutePaths.shop),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.brass,
                 foregroundColor: Colors.white,

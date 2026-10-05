@@ -20,7 +20,7 @@ class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -80,12 +80,9 @@ class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
             const SizedBox(width: 10),
             // Actions Section
             IconButton(
-              onPressed: () {},
+              tooltip: 'Search products',
+              onPressed: () => context.go(RoutePaths.shop),
               icon: const Icon(Icons.search, color: Color(0xFF1E4D3B), size: 22),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF1E4D3B), size: 22),
             ),
             const ProfileButton(color: Color(0xFF1E4D3B)),
           ],
@@ -102,7 +99,7 @@ class _NavBarLink extends StatefulWidget {
   final String title;
   final VoidCallback onTap;
 
-  const _NavBarLink({required this.title, required this.onTap, super.key});
+  const _NavBarLink({required this.title, required this.onTap});
 
   @override
   State<_NavBarLink> createState() => _NavBarLinkState();

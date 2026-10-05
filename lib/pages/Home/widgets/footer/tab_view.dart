@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../app/app_colors.dart';
+import '../../../../app/router/route_paths.dart';
 import 'footer_widgets.dart';
 
 class TabView extends StatelessWidget {
@@ -37,8 +38,8 @@ class TabView extends StatelessWidget {
                     const SizedBox(height: 25),
                     Row(
                       children: [
-                        SocialIcon(icon: Icons.facebook, onTap: () {}),
-                        SocialIcon(icon: Icons.camera_alt_outlined, onTap: () {}),
+                        const SocialIcon(icon: Icons.facebook),
+                        const SocialIcon(icon: Icons.work_outline),
                       ],
                     ),
                   ],
@@ -49,8 +50,9 @@ class TabView extends StatelessWidget {
                 child: FooterColumn(
                   title: 'Links',
                   children: [
-                    FooterLink(label: 'Home', onTap: () {}),
-                    FooterLink(label: 'Shop', onTap: () {}),
+                    FooterLink(label: 'Home', path: RoutePaths.home),
+                    FooterLink(label: 'Shop', path: RoutePaths.shop),
+                    FooterLink(label: 'Auctions', path: RoutePaths.auction),
                   ],
                 ),
               ),
@@ -61,12 +63,9 @@ class TabView extends StatelessWidget {
                   title: 'Contact',
                   children: const [
                     ContactItem(
-                      icon: Icons.email_outlined,
-                      text: 'contact@numismatichousebd.com',
-                    ),
-                    ContactItem(
-                      icon: Icons.phone_outlined,
-                      text: '+880 1234 567890',
+                      icon: Icons.chat_bubble_outline,
+                      text: 'Message us on Messenger',
+                      path: RoutePaths.contact,
                     ),
                   ],
                 ),
@@ -77,7 +76,7 @@ class TabView extends StatelessWidget {
           const Divider(color: Colors.white12),
           const SizedBox(height: 20),
           const Text(
-            '© 2024 Numismatic House BD.',
+            '© Numismatic House BD.',
             style: TextStyle(color: Colors.white38, fontSize: 12),
           ),
         ],

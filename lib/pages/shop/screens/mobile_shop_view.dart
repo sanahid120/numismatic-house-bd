@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../app/app_colors.dart';
-import '../../Home/widgets/popular_products/product_card.dart';
-import '../../Home/widgets/popular_products/product_model.dart';
-import '../widgets/pagination_widget.dart';
+import '../../../features/catalog/presentation/widgets/catalog_product_grid.dart';
+import '../../../features/catalog/providers/catalog_provider.dart';
 
 class MobileShopView extends StatelessWidget {
   final String searchQuery;
   final String selectedCategory;
   final int currentPage;
   final Function(int) onPageChanged;
+  final Function(String) onSearch;
+  final Function(String) onCategorySelected;
 
   const MobileShopView({
     super.key,
@@ -16,6 +18,8 @@ class MobileShopView extends StatelessWidget {
     required this.selectedCategory,
     required this.currentPage,
     required this.onPageChanged,
+    required this.onSearch,
+    required this.onCategorySelected,
   });
 
   @override
@@ -37,7 +41,8 @@ class MobileShopView extends StatelessWidget {
                         color: AppColors.canvas,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const TextField(
+                      child: TextField(
+                        onChanged: onSearch,
                         decoration: InputDecoration(
                           hintText: 'Search rare notes...',
                           prefixIcon: Icon(Icons.search, color: AppColors.forest),
@@ -63,14 +68,14 @@ class MobileShopView extends StatelessWidget {
               // --- Horizontal Categories ---
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildCategoryChip('All', true),
-                    _buildCategoryChip('Bangladesh', false),
-                    _buildCategoryChip('Pakistan', false),
-                    _buildCategoryChip('Foreign', false),
-                    _buildCategoryChip('Rare', false),
-                  ],
+                child: StreamBuilder<List<String>>(
+                    stream: context.read<CatalogProvider>().watchActiveCategories(),
+                    builder: (context, snapshot) {
+                      final labels = ['All Collection', ...(snapshot.data ?? const <String>[])];
+                      return Row(
+                        children: labels.map((label) => _buildCategoryChip(label)).toList(),
+                      );
+                    },
                 ),
               ),
             ],
@@ -86,7 +91,7 @@ class MobileShopView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${popularProducts.length} ITEMS FOUND',
+                  'CURATED COLLECTIBLES',
                     style: const TextStyle(
                       color: AppColors.mutedInk,
                       fontWeight: FontWeight.bold,
@@ -94,22 +99,20 @@ class MobileShopView extends StatelessWidget {
                       letterSpacing: 1,
                     ),
                   ),
-                  const Text(
-                    'SORT BY: NEWEST',
-                    style: TextStyle(
-                      color: AppColors.forestDeep,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
+                  if (selectedCategory != 'All Collection')
+                    Text(
+                      selectedCategory,
+                      style: const TextStyle(color: AppColors.forestDeep, fontSize: 12),
                     ),
-                  ),
                 ],
               ),
               const SizedBox(height: 20),
-              _buildProductGrid(),
-              const SizedBox(height: 40),
-              PaginationWidget(
-                currentPage: currentPage,
-                totalPages: 5,
+              CatalogProductGrid(
+                columns: 2,
+                aspectRatio: 0.6,
+                searchQuery: searchQuery,
+                category: selectedCategory,
+                page: currentPage,
                 onPageChanged: onPageChanged,
               ),
               const SizedBox(height: 20),
@@ -120,10 +123,13 @@ class MobileShopView extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryChip(String label, bool isSelected) {
+  Widget _buildCategoryChip(String label) {
+    final isSelected = selectedCategory == label ||
+        (label == 'All Collection' && selectedCategory.toLowerCase().startsWith('all'));
     return Container(
       margin: const EdgeInsets.only(right: 10),
-      child: Chip(
+      child: ActionChip(
+        onPressed: () => onCategorySelected(label),
         label: Text(label),
         backgroundColor: isSelected ? AppColors.forest : AppColors.canvas,
         labelStyle: TextStyle(
@@ -136,25 +142,5 @@ class MobileShopView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       ),
     );
-  }
-
-  Widget _buildProductGrid() {
-    return GridView.builder(
-      key: const ValueKey('shop_mobile_grid'),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 0.6,
-      ),
-      itemCount: popularProducts.length,
-      itemBuilder: (context, index) {
-        return ProductCard(
-          product: popularProducts[index],
-        );
-      },
-    );
-  }
+}
 }

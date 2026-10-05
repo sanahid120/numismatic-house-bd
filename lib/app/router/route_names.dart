@@ -2,6 +2,7 @@ abstract final class RouteNames {
   static const home = 'home';
   static const shop = 'shop';
   static const auction = 'auction';
+  static const auctionDetails = 'auctionDetails';
   static const productDetails = 'productDetails';
   static const contact = 'contact';
 
@@ -16,6 +17,7 @@ abstract final class RouteNames {
   // Admin Route Names
   static const adminDashboard = 'adminDashboard';
   static const adminProducts = 'adminProducts';
+  static const adminCategories = 'adminCategories';
   static const adminAuctions = 'adminAuctions';
   static const adminProfile = 'adminProfile';
 }

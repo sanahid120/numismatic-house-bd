@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../app/app_colors.dart';
-import '../models/auction_product.dart';
-import '../widgets/auction_card.dart';
+import '../../../app/router/route_paths.dart';
+import '../../../features/auctions/models/auction.dart';
+import '../../../features/auctions/presentation/widgets/auction_card.dart';
 
 class MobileAuctionView extends StatelessWidget {
   final String selectedCategory;
+  final List<AuctionProduct> products;
 
   const MobileAuctionView({
     super.key,
     required this.selectedCategory,
+    required this.products,
   });
 
   @override
@@ -77,13 +81,12 @@ class MobileAuctionView extends StatelessWidget {
         mainAxisSpacing: 12,
         childAspectRatio: 0.58,
       ),
-      itemCount: demoAuctions.length,
+      itemCount: products.length,
       itemBuilder: (context, index) {
+        final product = products[index];
         return AuctionCard(
-          product: demoAuctions[index],
-          onTap: () {
-             // TODO: Navigate to Auction Details
-          },
+          product: product,
+          onTap: () => context.push('${RoutePaths.auction}/${product.id}'),
         );
       },
     );

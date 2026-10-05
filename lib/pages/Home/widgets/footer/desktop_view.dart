@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../app/app_colors.dart';
+import '../../../../app/router/route_paths.dart';
 import 'footer_widgets.dart';
 
 class DesktopView extends StatelessWidget {
@@ -51,9 +52,9 @@ class DesktopView extends StatelessWidget {
                     const SizedBox(height: 30),
                     Row(
                       children: [
-                        SocialIcon(icon: Icons.facebook, onTap: () {}),
-                        SocialIcon(icon: Icons.camera_alt_outlined, onTap: () {}),
-                        SocialIcon(icon: Icons.language, onTap: () {}),
+                        const SocialIcon(icon: Icons.facebook),
+                        const SocialIcon(icon: Icons.work_outline),
+                        const SocialIcon(icon: Icons.language),
                       ],
                     ),
                   ],
@@ -65,10 +66,10 @@ class DesktopView extends StatelessWidget {
                 child: FooterColumn(
                   title: 'Quick Links',
                   children: [
-                    FooterLink(label: 'Home', onTap: () {}),
-                    FooterLink(label: 'Shop', onTap: () {}),
-                    FooterLink(label: 'My Account', onTap: () {}),
-                    FooterLink(label: 'Privacy Policy', onTap: () {}),
+                    FooterLink(label: 'Home', path: RoutePaths.home),
+                    FooterLink(label: 'Shop', path: RoutePaths.shop),
+                    FooterLink(label: 'My Account', path: RoutePaths.profile),
+                    FooterLink(label: 'Contact', path: RoutePaths.contact),
                   ],
                 ),
               ),
@@ -77,10 +78,10 @@ class DesktopView extends StatelessWidget {
                 child: FooterColumn(
                   title: 'Categories',
                   children: [
-                    FooterLink(label: 'Bangladeshi Notes', onTap: () {}),
-                    FooterLink(label: 'Pakistani Notes', onTap: () {}),
-                    FooterLink(label: 'Foreign Notes', onTap: () {}),
-                    FooterLink(label: 'New Arrivals', onTap: () {}),
+                    FooterLink(label: 'Bangladeshi Notes', path: '${RoutePaths.shop}?category=Bangladeshi'),
+                    FooterLink(label: 'Pakistani Notes', path: '${RoutePaths.shop}?category=Pakistani'),
+                    FooterLink(label: 'Foreign Notes', path: '${RoutePaths.shop}?category=Foreign'),
+                    FooterLink(label: 'Auctions', path: RoutePaths.auction),
                   ],
                 ),
               ),
@@ -95,12 +96,9 @@ class DesktopView extends StatelessWidget {
                       text: 'Dhaka, Bangladesh',
                     ),
                     ContactItem(
-                      icon: Icons.email_outlined,
-                      text: 'contact@numismatichousebd.com',
-                    ),
-                    ContactItem(
-                      icon: Icons.phone_outlined,
-                      text: '+880 1234 567890',
+                      icon: Icons.chat_bubble_outline,
+                      text: 'Message us on Messenger',
+                      path: RoutePaths.contact,
                     ),
                   ],
                 ),
@@ -114,7 +112,7 @@ class DesktopView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '© 2024 Numismatic House BD. All Rights Reserved.',
+                '© Numismatic House BD. All Rights Reserved.',
                 style: TextStyle(color: Colors.white38, fontSize: 12),
               ),
               Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../app/app_colors.dart';
+import '../../../../app/router/route_paths.dart';
 import 'footer_widgets.dart';
 
 class MobileView extends StatelessWidget {
@@ -47,8 +48,9 @@ class MobileView extends StatelessWidget {
           FooterColumn(
             title: 'Quick Links',
             children: [
-              FooterLink(label: 'Home', onTap: () {}),
-              FooterLink(label: 'Shop', onTap: () {}),
+              FooterLink(label: 'Home', path: RoutePaths.home),
+              FooterLink(label: 'Shop', path: RoutePaths.shop),
+              FooterLink(label: 'Auctions', path: RoutePaths.auction),
             ],
           ),
           const SizedBox(height: 30),
@@ -61,15 +63,12 @@ class MobileView extends StatelessWidget {
                 icon: Icons.location_on_outlined,
                 text: 'Dhaka, Bangladesh',
               ),
-              ContactItem(
-                icon: Icons.email_outlined,
-                text: 'contact@numismatichousebd.com',
-              ),
-              ContactItem(
-                icon: Icons.phone_outlined,
-                text: '+880 1234 567890',
-              ),
             ],
+          ),
+          ContactItem(
+            icon: Icons.chat_bubble_outline,
+            text: 'Message us on Messenger',
+            path: RoutePaths.contact,
           ),
           const SizedBox(height: 30),
 
@@ -86,9 +85,9 @@ class MobileView extends StatelessWidget {
           const SizedBox(height: 15),
           Row(
             children: [
-              SocialIcon(icon: Icons.facebook, onTap: () {}),
-              SocialIcon(icon: Icons.camera_alt_outlined, onTap: () {}),
-              SocialIcon(icon: Icons.language, onTap: () {}),
+              const SocialIcon(icon: Icons.facebook),
+              const SocialIcon(icon: Icons.work_outline),
+              const SocialIcon(icon: Icons.language),
             ],
           ),
 
@@ -97,7 +96,7 @@ class MobileView extends StatelessWidget {
           const SizedBox(height: 20),
           const Center(
             child: Text(
-              '© 2024 Numismatic House BD.',
+              '© Numismatic House BD.',
               style: TextStyle(color: Colors.white38, fontSize: 11),
             ),
           ),

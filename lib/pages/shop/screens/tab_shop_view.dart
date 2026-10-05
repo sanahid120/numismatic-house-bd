@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app/app_colors.dart';
-import '../../Home/widgets/popular_products/product_card.dart';
-import '../../Home/widgets/popular_products/product_model.dart';
-import '../widgets/pagination_widget.dart';
+import '../../../features/catalog/presentation/widgets/catalog_product_grid.dart';
 
 class TabShopView extends StatelessWidget {
   final String searchQuery;
@@ -28,12 +26,6 @@ class TabShopView extends StatelessWidget {
           _buildTabHeader(context),
           const SizedBox(height: 30),
           _buildProductGrid(),
-          const SizedBox(height: 60),
-          PaginationWidget(
-            currentPage: currentPage,
-            totalPages: 5,
-            onPageChanged: onPageChanged,
-          ),
         ],
       ),
     );
@@ -84,22 +76,13 @@ class TabShopView extends StatelessWidget {
   }
 
   Widget _buildProductGrid() {
-    return GridView.builder(
-      key: const ValueKey('shop_tab_grid'),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
-        childAspectRatio: 0.68,
-      ),
-      itemCount: popularProducts.length,
-      itemBuilder: (context, index) {
-        return ProductCard(
-          product: popularProducts[index],
-        );
-      },
+    return CatalogProductGrid(
+      columns: 3,
+      aspectRatio: 0.68,
+      searchQuery: searchQuery,
+      category: selectedCategory,
+      page: currentPage,
+      onPageChanged: onPageChanged,
     );
   }
 }

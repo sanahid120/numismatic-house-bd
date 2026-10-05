@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../app/app_colors.dart';
+import '../../../../app/router/route_paths.dart';
 
 class DesktopView extends StatelessWidget {
   const DesktopView({super.key});
@@ -26,8 +28,8 @@ class DesktopView extends StatelessWidget {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
-              AppColors.forestDeep.withOpacity(0.9),
-              AppColors.forestDeep.withOpacity(0.3),
+              AppColors.forestDeep.withValues(alpha: 0.9),
+              AppColors.forestDeep.withValues(alpha: 0.3),
               Colors.transparent,
             ],
           ),
@@ -40,7 +42,7 @@ class DesktopView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColors.brass.withOpacity(0.2),
+                color: AppColors.brass.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(color: AppColors.brass, width: 1),
               ),
@@ -80,7 +82,7 @@ class DesktopView extends StatelessWidget {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => context.go(RoutePaths.shop),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.brass,
                     foregroundColor: Colors.white,
@@ -91,7 +93,7 @@ class DesktopView extends StatelessWidget {
                 ),
                 const SizedBox(width: 20),
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () => context.go(RoutePaths.auction),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
                     side: const BorderSide(color: Colors.white),

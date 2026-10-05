@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../app/app_colors.dart';
+import '../../../app/config/app_config.dart';
+import '../../../features/catalog/providers/catalog_provider.dart';
 import '../../../pages/Home/widgets/footer/footer_section.dart';
-import '../../../pages/Home/widgets/popular_products/product_model.dart';
+import '../../../features/catalog/models/product.dart';
 import '../../../shared/widgets/navbar/navbar.dart';
 import '../../../shared/widgets/navbar/site_drawer.dart';
 
@@ -13,29 +17,50 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = popularProducts.firstWhere(
-      (p) => p.id == productId,
-      orElse: () => popularProducts.first,
-    );
+    return StreamBuilder<Product?>(
+      stream: context.read<CatalogProvider>().watchPublishedProduct(productId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return _messagePage('We could not load this item. Please try again.');
+        }
+        if (!snapshot.hasData) {
+          return _messagePage('Loading collectible…', loading: true);
+        }
+        final product = snapshot.data;
+        if (product == null) {
+          return _messagePage('This item is no longer available.');
+        }
 
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: const Navbar(),
-      endDrawer: const SiteDrawer(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ScreenTypeLayout.builder(
-              mobile: (context) => _MobileProductDetails(product: product),
-              tablet: (context) => _DesktopProductDetails(product: product, isTablet: true),
-              desktop: (context) => _DesktopProductDetails(product: product),
+        return Scaffold(
+          backgroundColor: AppColors.backgroundColor,
+          appBar: const Navbar(),
+          drawer: const SiteDrawer(),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                ScreenTypeLayout.builder(
+                  mobile: (context) => _MobileProductDetails(product: product),
+                  tablet: (context) => _DesktopProductDetails(product: product, isTablet: true),
+                  desktop: (context) => _DesktopProductDetails(product: product),
+                ),
+                const FooterSection(),
+              ],
             ),
-            const FooterSection(),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
+
+  Widget _messagePage(String message, {bool loading = false}) => Scaffold(
+    backgroundColor: AppColors.backgroundColor,
+    appBar: const Navbar(),
+    body: Center(
+      child: loading
+          ? const CircularProgressIndicator(color: AppColors.forest)
+          : Text(message, style: const TextStyle(color: AppColors.mutedInk)),
+    ),
+  );
 }
 
 class _ProductImageGallery extends StatefulWidget {
@@ -234,22 +259,42 @@ class _ProductInfoSection extends StatelessWidget {
         const SizedBox(height: 30),
         const Text('Description', style: TextStyle(color: AppColors.forestDeep, fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 15),
-        const Text(
-          'This is a premium high-grade collectible note in UNC condition. Each note is verified for authenticity and quality before being listed.',
+        Text(
+          product.description.isNotEmpty
+              ? product.description
+              : 'Contact us for more information about this collectible.',
           style: TextStyle(color: AppColors.mutedInk, fontSize: 16, height: 1.6),
         ),
         const SizedBox(height: 40),
         SizedBox(
           width: isMobile ? double.infinity : 300,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              final uri = Uri.https(
+                'm.me',
+                AppConfig.messengerPageUsername,
+                {'ref': 'order_${product.id}'},
+              );
+              final opened = await launchUrl(
+                uri,
+                webOnlyWindowName: '_blank',
+              );
+              if (!opened && context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not open Messenger.')),
+                );
+              }
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.forest,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 20),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            child: const Text('ADD TO WISHLIST', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            child: const Text(
+              'MESSAGE ABOUT THIS ITEM',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
           ),
         ),
       ],

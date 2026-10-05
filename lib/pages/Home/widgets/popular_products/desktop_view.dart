@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'product_card.dart';
-import 'product_model.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../app/router/route_paths.dart';
+import '../../../../features/catalog/presentation/widgets/catalog_product_grid.dart';
 import 'section_header_with_action.dart';
 
 class DesktopView extends StatelessWidget {
@@ -15,27 +16,10 @@ class DesktopView extends StatelessWidget {
           SectionHeaderWithAction(
             title: 'Popular Products',
             subtitle: 'Featured Collectibles',
-            onSeeAllTap: () {},
+            onSeeAllTap: () => context.go(RoutePaths.shop),
           ),
           const SizedBox(height: 40),
-          GridView.builder(
-            key: const ValueKey('popular_products_desktop_grid'),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              crossAxisSpacing: 25,
-              mainAxisSpacing: 25,
-              childAspectRatio: 0.75,
-            ),
-            itemCount: popularProducts.length,
-            itemBuilder: (context, index) {
-              return ProductCard(
-                key: ValueKey('desktop_product_${popularProducts[index].name}_$index'),
-                product: popularProducts[index],
-              );
-            },
-          ),
+          const CatalogProductGrid(columns: 4, aspectRatio: 0.75, maxItems: 8),
         ],
       ),
     );
