@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import '../../../app/app_colors.dart';
 import '../../../app/router/route_paths.dart';
+import '../../../auth/providers/auth_provider.dart';
 import '../../widgets/admin_sidebar.dart';
 
 class AdminDashboard extends StatelessWidget {
@@ -36,32 +38,26 @@ class AdminDashboard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Dashboard Overview',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.forestDeep,
-                        ),
-                      ),
+                      _buildHeader(),
                       const SizedBox(height: 30),
-                      // Stats Grid - Only Products and Auctions
+                      // Stats Grid
                       _buildStatsGrid(sizingInformation),
                       const SizedBox(height: 40),
                       
+                      // Responsive Content: Engagement and Admin Quick Info
                       if (!sizingInformation.isMobile)
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(flex: 2, child: _buildEngagementSection()),
                             const SizedBox(width: 30),
-                            Expanded(flex: 1, child: _buildRecentActivity()),
+                            Expanded(flex: 1, child: _buildAdminQuickProfile(context)),
                           ],
                         )
                       else ...[
-                        _buildEngagementSection(),
+                        _buildAdminQuickProfile(context),
                         const SizedBox(height: 30),
-                        _buildRecentActivity(),
+                        _buildEngagementSection(),
                       ],
                     ],
                   ),
@@ -71,6 +67,17 @@ class AdminDashboard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildHeader() {
+    return const Text(
+      'Dashboard Overview',
+      style: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
+        color: AppColors.forestDeep,
+      ),
     );
   }
 
@@ -125,8 +132,60 @@ class AdminDashboard extends StatelessWidget {
     );
   }
 
+  Widget _buildAdminQuickProfile(BuildContext context) {
+    return Consumer<AuthProvider>(
+      builder: (context, auth, child) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 5)),
+            ],
+          ),
+          child: Column(
+            children: [
+              const CircleAvatar(
+                radius: 40,
+                backgroundColor: AppColors.mint,
+                child: Icon(Icons.admin_panel_settings, size: 40, color: AppColors.forest),
+              ),
+              const SizedBox(height: 15),
+              Text(
+                '${auth.userData?['firstName'] ?? 'Admin'} ${auth.userData?['lastName'] ?? ''}',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const Text('Administrator', style: TextStyle(color: AppColors.brass, fontSize: 12)),
+              const SizedBox(height: 20),
+              const Divider(),
+              const SizedBox(height: 10),
+              _buildQuickLink(Icons.person_outline, 'Profile Settings', () {
+                // Navigate to profile
+              }),
+              _buildQuickLink(Icons.logout, 'Sign Out', () async {
+                await auth.signOut();
+              }, isDestructive: true),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildQuickLink(IconData icon, String title, VoidCallback onTap, {bool isDestructive = false}) {
+    return ListTile(
+      onTap: onTap,
+      dense: true,
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(icon, size: 20, color: isDestructive ? Colors.redAccent : AppColors.forest),
+      title: Text(title, style: TextStyle(color: isDestructive ? Colors.redAccent : AppColors.forestDeep)),
+    );
+  }
+
   Widget _buildEngagementSection() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -143,51 +202,7 @@ class AdminDashboard extends StatelessWidget {
           Container(
             height: 300,
             alignment: Alignment.center,
-            child: const Text('Chart Visualization Placeholder', style: TextStyle(color: AppColors.mutedInk)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecentActivity() {
-    return Container(
-      padding: const EdgeInsets.all(30),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 5)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Recent Activity', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.forestDeep)),
-          const SizedBox(height: 20),
-          _buildActivityItem('New Auction Started', '2 mins ago', Icons.gavel, Colors.red),
-          _buildActivityItem('Product Updated', '45 mins ago', Icons.edit, Colors.blue),
-          _buildActivityItem('New Note Added', '2 hours ago', Icons.add_circle_outline, Colors.green),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActivityItem(String title, String time, IconData icon, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        children: [
-          Icon(icon, size: 18, color: color),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                Text(time, style: const TextStyle(color: AppColors.mutedInk, fontSize: 11)),
-              ],
-            ),
+            child: const Text('Chart Statistics Visualization Placeholder', style: TextStyle(color: AppColors.mutedInk)),
           ),
         ],
       ),

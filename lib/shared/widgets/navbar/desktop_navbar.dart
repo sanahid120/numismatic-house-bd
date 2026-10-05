@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/router/route_paths.dart';
+import 'profile_button.dart';
 
 class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
   const DesktopNavbar({super.key});
@@ -19,7 +20,7 @@ class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(5),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -86,10 +87,7 @@ class DesktopNavbar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () {},
               icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF1E4D3B), size: 22),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.person_outline, color: Color(0xFF1E4D3B), size: 22),
-            ),
+            const ProfileButton(color: Color(0xFF1E4D3B)),
           ],
         ),
       ),
@@ -104,7 +102,7 @@ class _NavBarLink extends StatefulWidget {
   final String title;
   final VoidCallback onTap;
 
-  const _NavBarLink({required this.title, required this.onTap});
+  const _NavBarLink({required this.title, required this.onTap, super.key});
 
   @override
   State<_NavBarLink> createState() => _NavBarLinkState();

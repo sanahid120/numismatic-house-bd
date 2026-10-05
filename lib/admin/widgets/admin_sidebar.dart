@@ -62,6 +62,12 @@ class AdminSidebar extends StatelessWidget {
             title: 'Manage Auctions',
             path: RoutePaths.adminAuctions,
           ),
+          _buildSidebarItem(
+            context,
+            icon: Icons.person_outline,
+            title: 'My Profile',
+            path: RoutePaths.adminProfile,
+          ),
           const Spacer(),
           const Divider(color: Colors.white12),
           _buildSidebarItem(

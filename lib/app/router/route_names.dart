@@ -5,8 +5,17 @@ abstract final class RouteNames {
   static const productDetails = 'productDetails';
   static const contact = 'contact';
 
+  // Auth Route Names
+  static const signIn = 'signIn';
+  static const signUp = 'signUp';
+
+  // Profile Route Names
+  static const profile = 'profile';
+  
+
   // Admin Route Names
   static const adminDashboard = 'adminDashboard';
   static const adminProducts = 'adminProducts';
   static const adminAuctions = 'adminAuctions';
+  static const adminProfile = 'adminProfile';
 }

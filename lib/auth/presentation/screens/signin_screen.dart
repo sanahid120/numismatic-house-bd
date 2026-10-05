@@ -7,57 +7,49 @@ import '../../../app/router/route_paths.dart';
 import '../../../utils/validations.dart';
 import '../../providers/auth_provider.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SigninScreen extends StatefulWidget {
+  const SigninScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SigninScreen> createState() => _SigninScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SigninScreenState extends State<SigninScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSignup() async {
+  Future<void> _handleSignin() async {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final success = await authProvider.signUp(
+      final success = await authProvider.signIn(
         email: _emailController.text.trim(),
         password: _passwordController.text,
-        firstName: _firstNameController.text.trim(),
-        lastName: _lastNameController.text.trim(),
       );
 
       if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration successful! Please check your email for verification.'),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        context.go(RoutePaths.signIn);
+        // Check role for redirection
+        final role = authProvider.userData?['role'] ?? 'user';
+        if (role == 'admin') {
+          context.go(RoutePaths.adminDashboard);
+        } else {
+          context.go(RoutePaths.home);
+        }
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? 'Signup failed'),
+            content: Text(authProvider.errorMessage ?? 'Signin failed'),
             backgroundColor: AppColors.clay,
             behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         );
       }
@@ -70,8 +62,8 @@ class _SignupScreenState extends State<SignupScreen> {
       backgroundColor: AppColors.backgroundColor,
       body: ResponsiveBuilder(
         builder: (context, sizingInformation) {
-          double cardWidth = sizingInformation.isDesktop ? 550 : double.infinity;
-
+          double cardWidth = sizingInformation.isDesktop ? 450 : double.infinity;
+          
           return Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -106,17 +98,18 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        // Brand Identity
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: AppColors.forest.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.person_add_outlined, size: 40, color: AppColors.forest),
+                          child: const Icon(Icons.account_balance, size: 40, color: AppColors.forest),
                         ),
                         const SizedBox(height: 24),
                         const Text(
-                          'Create Account',
+                          'Welcome Back',
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.w900,
@@ -126,52 +119,25 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          'Join our community of numismatic collectors',
+                          'Access your numismatic account',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: AppColors.mutedInk, fontSize: 14),
                         ),
                         const SizedBox(height: 40),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _firstNameController,
-                                decoration: _inputDecoration('First Name', Icons.person_outline),
-                                validator: (val) => Validations.validateName(val, 'First Name'),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: TextFormField(
-                                controller: _lastNameController,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-
-                                decoration: _inputDecoration('Last Name', Icons.person_outline),
-                                validator: (val) => Validations.validateName(val, 'Last Name'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-
+                        
                         // Email Field
                         TextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-
                           decoration: _inputDecoration('Email Address', Icons.email_outlined),
                           validator: Validations.validateEmail,
                         ),
                         const SizedBox(height: 20),
-
+                        
                         // Password Field
                         TextFormField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-
                           decoration: _inputDecoration('Password', Icons.lock_outline).copyWith(
                             suffixIcon: IconButton(
                               icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off, size: 20),
@@ -180,27 +146,27 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                           validator: Validations.validatePassword,
                         ),
-                        const SizedBox(height: 20),
-
-                        // Confirm Password Field
-                        TextFormField(
-                          controller: _confirmPasswordController,
-                          obscureText: _obscurePassword,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-
-                          decoration: _inputDecoration('Confirm Password', Icons.lock_outline),
-                          validator: (val) => Validations.validateConfirmPassword(val, _passwordController.text),
+                        
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(color: AppColors.forest, fontWeight: FontWeight.bold, fontSize: 13),
+                            ),
+                          ),
                         ),
-                        const SizedBox(height: 32),
-
-                        // Sign Up Button
+                        const SizedBox(height: 24),
+                        
+                        // Action Button
                         Consumer<AuthProvider>(
                           builder: (context, auth, child) {
                             return SizedBox(
                               width: double.infinity,
                               height: 56,
                               child: ElevatedButton(
-                                onPressed: auth.isLoading ? null : _handleSignup,
+                                onPressed: auth.isLoading ? null : _handleSignin,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.forest,
                                   foregroundColor: Colors.white,
@@ -214,7 +180,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
                                       )
                                     : const Text(
-                                        'Sign Up',
+                                        'Sign In',
                                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                       ),
                               ),
@@ -222,16 +188,19 @@ class _SignupScreenState extends State<SignupScreen> {
                           },
                         ),
                         const SizedBox(height: 32),
-
-                        // Footer Link
+                        
+                        // Switch between screens
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Already have an account? ", style: TextStyle(color: AppColors.mutedInk)),
+                            const Text(
+                              "Don't have an account? ",
+                              style: TextStyle(color: AppColors.mutedInk, fontSize: 14),
+                            ),
                             TextButton(
-                              onPressed: () => context.go(RoutePaths.signIn),
+                              onPressed: () => context.go(RoutePaths.signUp),
                               child: const Text(
-                                'Sign In',
+                                'Sign Up',
                                 style: TextStyle(color: AppColors.brass, fontWeight: FontWeight.w900, fontSize: 14),
                               ),
                             ),
@@ -261,7 +230,7 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.line.withOpacity(0.5)),
+        borderSide: BorderSide(color: AppColors.line.withValues(alpha: 0.5)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -270,10 +239,6 @@ class _SignupScreenState extends State<SignupScreen> {
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: AppColors.clay, width: 1),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.clay, width: 1.5),
       ),
     );
   }
